@@ -1,16 +1,29 @@
-name: 'Assets Checker by BharatPe'
+name: Check static images
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
-on: [pull_request]
+permissions:
+  issues: write
+  pull-requests: write
+  repo: write
+
 jobs:
   Assets-Checker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+          lfs: true
       - uses: actions/setup-node@v3
         with:
+          registry-url: https://registry.npmjs.org/
           node-version: 18
       - uses: immutable/assets-checker@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target_folder: src/
-          thrashold_size: 1000
+          target_folder: ./
+          thrashold_size: 5000
