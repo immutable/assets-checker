@@ -4,7 +4,7 @@ const exec = require("@actions/exec");
 const { Octokit } = require("@octokit/rest");
 const fs = require('fs');
 
-const GITHUB_COMMENT_BOT_PREFIX = `### :robot_face: AssetsCheckerBot\n`;
+const GITHUB_COMMENT_BOT_PREFIX = `## AssetsCheckerBot\n`;
 const convertBytes = function(bytes) {
   const sizes = ["Bytes", "KB", "MB", "GB", "TB"]
 
