@@ -13351,9 +13351,8 @@ const main = async () => {
       return sourceArray;
     }
 
-    // @TODO: add webp + riv to this asset list
     await exec.exec(
-      `find ${inputs.target_folder} -type f \( -name "*.jpeg" -o -name "*.png" -o -name "*.svg" -o -name "*.gif" -o -name "*.jpg" \) -size +${inputs.thrashold_size}k -exec ls -lh {} \;`,
+      `find ${inputs.target_folder} -type f \( -name "*.jpeg" -o -name "*.png" -o -name "*.svg" -o -name "*.gif" -o -name "*.jpg" -o -name "*.riv" -o -name "*.webp" \) -size +${inputs.thrashold_size}k -exec ls -lh {} \;`,
       undefined,
       {
         listeners: {
@@ -13373,8 +13372,8 @@ const main = async () => {
 
     const invalidFiles = [...arrayOutput];
 
-    const successBody = `:green_cricle: **Awesome**, your all assets are less than ${inputs.thrashold_size}Kb.`;
-    const errorBody = `:warning: **Oh Snap!**, You have ${count} asset(s) with size more than \`${inputs.thrashold_size}Kb\`. 
+    const successBody = `:green_circle: **Awesome**, all of your image assets are less than \`${inputs.thrashold_size}Kb\`.`;
+    const errorBody = `:warning: **Oh Snap!**, You have ${count} image asset(s) with size more than \`${inputs.thrashold_size}Kb\`. 
 If you unable to optimize these assets, you can use \`.assets-ignore\` file and add these assets in \`.assets-ignore\` file`;
 
     const getTableDataString = (invalidFiles) => {
