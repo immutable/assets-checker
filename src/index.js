@@ -178,14 +178,14 @@ const main = async () => {
           comment.body.includes(GITHUB_COMMENT_BOT_PREFIX)
         ) {
           console.log("@@@ DELETING A COMMENT !!!", {
-            owner,
+            owner: "github-actions[bot]",
             repo,
             comment_id: comment.id,
-          });
+          }, comment);
 
           try {
             await octokit.rest.issues.deleteComment({
-              owner,
+              owner: "github-actions[bot]",
               repo,
               comment_id: comment.id,
             });
