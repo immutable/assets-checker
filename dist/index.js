@@ -13387,7 +13387,7 @@ const main = async () => {
       }
 
       let res =
-        "## ${GITHUB_COMMENT_BOT_PREFIX}\n### Oversized Assets\n|File Name|File Size|\n|-----|:-----:|\n";
+        `## ${GITHUB_COMMENT_BOT_PREFIX}\n### Oversized Assets\n|File Name|File Size|\n|-----|:-----:|\n`;
       for (const item of filteredFiles) {
         res += `|${item[0]}|${item[1]}|\n`;
       }

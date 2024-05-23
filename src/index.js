@@ -86,7 +86,7 @@ const main = async () => {
       return sourceArray;
     }
 
-    // @TODO: add webp and rive to this asset list
+    // @TODO: add webp + rive to this asset list
     await exec.exec(
       `find ${inputs.target_folder} -type f \( -name "*.jpeg" -o -name "*.png" -o -name "*.svg" -o -name "*.gif" -o -name "*.jpg" \) -size +${inputs.thrashold_size}k -exec ls -lh {} \;`,
       null,
@@ -112,7 +112,7 @@ const main = async () => {
       }
 
       let res =
-        "## ${GITHUB_COMMENT_BOT_PREFIX}\n### Oversized Assets\n|File Name|File Size|\n|-----|:-----:|\n";
+        `## ${GITHUB_COMMENT_BOT_PREFIX}\n### Oversized Assets\n|File Name|File Size|\n|-----|:-----:|\n`;
       for (const item of filteredFiles) {
         res += `|${item[0]}|${item[1]}|\n`;
       }
