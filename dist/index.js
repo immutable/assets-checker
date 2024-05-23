@@ -13279,7 +13279,7 @@ const exec = __nccwpck_require__(1514);
 const { Octokit } = __nccwpck_require__(5375);
 const fs = __nccwpck_require__(7561);
 
-const GITHUB_COMMENT_BOT_PREFIX = ":robot: AssetsCheckerBot";
+const GITHUB_COMMENT_BOT_PREFIX = ":mountain: AssetsCheckerBot";
 const convertBytes = (bytes) => {
   const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
 
@@ -13422,23 +13422,6 @@ const main = async () => {
     };
 
     /**
-     * Publish .assets-ignore entries in github comment.
-     *
-     * @param {Array} ignoreArray array of files which is added in .assets-ignore file.
-     */
-    const publishIgnoreAssetsTable = async (ignoreArray) => {
-      if (ignoreArray.length) {
-        const body = await getAllIgnoredFileString(ignoreArray);
-        return octokit.rest.issues.createComment({
-          owner,
-          repo,
-          issue_number: issueNumber,
-          body,
-        });
-      }
-    };
-
-    /**
      * Delete previously posted github comments.
      */
     const removePreviousBotComments = async () => {
@@ -13453,20 +13436,14 @@ const main = async () => {
           comment.body.includes(GITHUB_COMMENT_BOT_PREFIX)
         ) {
           try {
-            console.log("@@@ DELETING A COMMENT !!!", {
-              owner,
-              repo,
-              comment_id: comment.id,
-            }, comment);
-            // await octokit.request(`DELETE /repos/${owner}/${repo}/issues/comments/${comment.id}`, {
+            // @NOTE: looks like there is a bug with octokit.rest.issues.deleteComment 
+            // :facepalm; so gotta use octokit.request instead.
+            // await octokit.rest.issues.deleteComment({
             //   owner,
             //   repo,
             //   comment_id: comment.id,
-            //   headers: {
-            //     'X-GitHub-Api-Version': '2022-11-28'
-            //   }
-            // })
-            await octokit.rest.issues.deleteComment({
+            // });
+            await octokit.request(`DELETE /repos/${owner}/${repo}/issues/comments/${comment.id}`, {
               owner,
               repo,
               comment_id: comment.id,
@@ -13483,33 +13460,20 @@ const main = async () => {
 
     await removePreviousBotComments();
 
-    // @TODO: combine all comments into a single comment 
-    // (its easier to read and manage)
-    if (count > 0) {
-      octokit.rest.issues.createComment({
-        owner,
-        repo,
-        issue_number: issueNumber,
-        body: errorBody,
-      });
+    const checkSuccess = count === 0;
+    const commentBody = `## ${GITHUB_COMMENT_BOT_PREFIX}
+${checkSuccess ? successBody : `${errorBody}
+${getTableDataString(invalidFiles)}
+${await getAllIgnoredFileString(ignoreArray)}`}`;
 
-      octokit.rest.issues.createComment({
-        owner,
-        repo,
-        issue_number: issueNumber,
-        body: getTableDataString(invalidFiles),
-      });
+    octokit.rest.issues.createComment({
+      owner,
+      repo,
+      issue_number: issueNumber,
+      body: commentBody,
+    });
 
-      await publishIgnoreAssetsTable(ignoreArray);
-      core.setFailed("Invalid size assets exists !!!");
-    } else {
-      octokit.rest.issues.createComment({
-        owner,
-        repo,
-        issue_number: issueNumber,
-        body: successBody,
-      });
-    }
+    if (!checkSuccess) core.setFailed("Invalid size assets exists !!!");
   } catch (error) {
     core.setFailed(error.message);
   }
