@@ -176,7 +176,7 @@ const main = async () => {
           comment.user.login === "github-actions[bot]" &&
           comment.body.includes(GITHUB_COMMENT_BOT_PREFIX)
         ) {
-          console.log("@@@@ DELETING A COMMENT !!!", comment);
+          console.log("@@@ DELETING A COMMENT !!!", comment);
 
           try {
             await octokit.rest.issues.deleteComment({
@@ -185,7 +185,7 @@ const main = async () => {
               comment_id: comment.id,
             });
           } catch (error) {
-            console.log("Error while deleting comment", error);
+            console.error("@@@ Error while deleting comment !!!", error);
           }
         }
       }

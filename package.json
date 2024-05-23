@@ -14,15 +14,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bharatpe/assets-checker.git"
+    "url": "git+https://github.com/immutable/assets-checker.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bharatpe/assets-checker/issues"
+    "url": "https://github.com/immutable/assets-checker/issues"
   },
-  "homepage": "https://github.com/bharatpe/assets-checker#readme",
+  "homepage": "https://github.com/immutable/assets-checker#readme",
   "dependencies": {
     "@actions/core": "^1.9.1",
     "@actions/exec": "^1.1.1",
