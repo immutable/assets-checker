@@ -167,13 +167,13 @@ const main = async () => {
         owner,
         repo,
         issue_number: issueNumber
-      }).then(({ data }) => {
-        for(let comment of data) {
-          if(
+      }).then(async ({ data }) => {
+        for (let comment of data) {
+          if (
             comment.user.login === 'github-actions[bot]' 
             && comment.body.includes(GITHUB_COMMENT_BOT_PREFIX)
           ) {
-            octokit.rest.issues.deleteComment({
+            await octokit.rest.issues.deleteComment({
               owner,
               repo,
               comment_id: comment.id
