@@ -99,7 +99,7 @@ const main = async () => {
     const invalidFiles = [...arrayOutput];
 
     const successBody = `rocket: **Awesome**, your all assets are less than ${inputs.thrashold_size}Kb.`;
-    const errorBody = `:warning: **Oh, Snap**, You have ${count} assets with size more than ${inputs.thrashold_size}Kb. Please optimize them. If you unable to optimize these assets, you can use .assets-ignore file and add these assets in .assets-ignore file`;
+    const errorBody = `:warning: **Oh, Snap**, You have ${count} asset(s) with size more than ${inputs.thrashold_size}Kb. Please optimize them. If you unable to optimize these assets, you can use .assets-ignore file and add these assets in .assets-ignore file`;
 
     const getTableDataString = (invalidFiles) => {
       const filteredFiles = [];
@@ -188,6 +188,7 @@ const main = async () => {
     const checkSuccess = count === 0;
     const commentBody = `## ${GITHUB_COMMENT_BOT_PREFIX}
 ${checkSuccess ? successBody : `${errorBody}
+
 ${getTableDataString(invalidFiles)}
 ${await getAllIgnoredFileString(ignoreArray)}`}`;
 
