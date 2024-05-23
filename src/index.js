@@ -183,19 +183,22 @@ const main = async () => {
               repo,
               comment_id: comment.id,
             }, comment);
-            await octokit.request(`DELETE /repos/${owner}/${repo}/issues/comments/${comment.id}`, {
+            // await octokit.request(`DELETE /repos/${owner}/${repo}/issues/comments/${comment.id}`, {
+            //   owner,
+            //   repo,
+            //   comment_id: comment.id,
+            //   headers: {
+            //     'X-GitHub-Api-Version': '2022-11-28'
+            //   }
+            // })
+            await octokit.rest.issues.deleteComment({
               owner,
               repo,
               comment_id: comment.id,
               headers: {
                 'X-GitHub-Api-Version': '2022-11-28'
               }
-            })
-            // await octokit.rest.issues.deleteComment({
-            //   owner,
-            //   repo,
-            //   comment_id: comment.id,
-            // });
+            });
           } catch (error) {
             console.error("@@@ Error while deleting comment !!!", error);
           }
