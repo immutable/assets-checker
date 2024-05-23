@@ -13373,8 +13373,8 @@ const main = async () => {
 
     const invalidFiles = [...arrayOutput];
 
-    const successBody = `## ${GITHUB_COMMENT_BOT_PREFIX}\n:rocket: Congratulations, your all assets are less than ${inputs.thrashold_size}Kb.`;
-    const errorBody = `## ${GITHUB_COMMENT_BOT_PREFIX}\n:eyes: Oops, You have ${count} assets with size more than ${inputs.thrashold_size}Kb. Please optimize them. If you unable to optimize these assets, you can use .assets-ignore file and add these assets in .assets-ignore file`;
+    const successBody = `rocket: **Awesome**, your all assets are less than ${inputs.thrashold_size}Kb.`;
+    const errorBody = `:warning: **Oh, Snap**, You have ${count} assets with size more than ${inputs.thrashold_size}Kb. Please optimize them. If you unable to optimize these assets, you can use .assets-ignore file and add these assets in .assets-ignore file`;
 
     const getTableDataString = (invalidFiles) => {
       const filteredFiles = [];
@@ -13386,7 +13386,7 @@ const main = async () => {
       }
 
       let res =
-        `## ${GITHUB_COMMENT_BOT_PREFIX}\nOversized Assets\n|File Name|File Size|\n|-----|:-----:|\n`;
+        "**Oversized Assets**\n|File Name|File Size|\n|-----|:-----:|\n";
       for (const item of filteredFiles) {
         res += `|${item[0]}|${item[1]}|\n`;
       }
@@ -13401,7 +13401,7 @@ const main = async () => {
      */
     const getAllIgnoredFileString = (ignoreArray) => {
       return new Promise((resolve, reject) => {
-        let res = `## ${GITHUB_COMMENT_BOT_PREFIX}\nAll .assets-ignored Files\n|File Name|File Size\n|-----|:-----:|\n`;
+        let res = "**All .assets-ignored Files**\n|File Name|File Size\n|-----|:-----:|\n";
         for (let index = 0; index < ignoreArray.length; index++) {
           const item = ignoreArray[index];
 
