@@ -13436,7 +13436,8 @@ const main = async () => {
         issue_number: issueNumber
       }).then(({ data }) => {
         for(let comment of data) {
-          if(comment.user.login === "github-actions[bot]" && comment.body.includes(GITHUB_COMMENT_BOT_PREFIX)) {
+          console.log('@@@@@@@', comment.user, comment.body);
+          if(comment.body.includes(GITHUB_COMMENT_BOT_PREFIX)) {
             octokit.rest.issues.deleteComment({
               owner,
               repo,
