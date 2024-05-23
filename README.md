@@ -17,6 +17,7 @@ npm run build
 
 ### Success - ![Screenshot 2024-05-23 at 4 28 37 PM](https://github.com/immutable/assets-checker/assets/1452237/5d586d4f-9e49-499b-8459-ebe22863b847)
 
+
 ### Failure - ![Screenshot 2024-05-23 at 4 30 21 PM](https://github.com/immutable/assets-checker/assets/1452237/7e39fbe3-af4a-43ff-a16a-e5e0a84321f9)
 
 
