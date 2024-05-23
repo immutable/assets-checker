@@ -15,12 +15,10 @@ npm run build
 
 ## Output Stats
 
-### Success - 
-<img width="926" alt="Screenshot 2022-08-24 at 4 49 47 PM" src="https://user-images.githubusercontent.com/90181918/186406594-e63aadd4-90cd-47ef-a81c-55f3aa106b41.png">
+### Success - ![Screenshot 2024-05-23 at 4 28 37 PM](https://github.com/immutable/assets-checker/assets/1452237/5d586d4f-9e49-499b-8459-ebe22863b847)
 
-### Failure - 
+### Failure - ![Screenshot 2024-05-23 at 4 30 21 PM](https://github.com/immutable/assets-checker/assets/1452237/7e39fbe3-af4a-43ff-a16a-e5e0a84321f9)
 
-<img width="943" alt="Screenshot 2022-08-24 at 4 49 39 PM" src="https://user-images.githubusercontent.com/90181918/186406640-7766bf53-253d-4039-aa68-e244d40fd716.png">
 
 ### .assets-ignore file
 Might be we have some images which size greater then the threshold we provided, in this case we can ignore these files by using .assets-ignore file.
@@ -34,41 +32,7 @@ Might be we have some images which size greater then the threshold we provided, 
 
 ## Usage:
 
-Checkout [action.yml](./action.yml)
-
-Please check the below code for detailed usage:
-```yaml
-steps:
-      - uses: bharatpe/assets-checker@main
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          target_folder: src/assets
-          thrashold_size: 100
-```
-
-By default github actions work on `node 12`.For a specific node version use:
-
-```yaml
-- uses: actions/setup-node@v1
-        with:
-          node-version: '16.16.0'
-```
-
-**Ex:**
-```yaml
-steps:
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '16.16.0'
-      - uses: bharatpe/assets-checker@main
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          target_folder: src/assets
-          thrashold_size: 100
-
-```
-
-Also check [Demo.yml](./demo.yml) for complete configuration(on using github actions)
+Check [Demo.yml](./demo.yml) for complete configuration(on using github actions)
 
 ## License
 The scripts and documentation in this project are released under the [MIT License](./LICENSE)
