@@ -173,6 +173,7 @@ const main = async () => {
             comment.user.login === 'github-actions[bot]' 
             && comment.body.includes(GITHUB_COMMENT_BOT_PREFIX)
           ) {
+            console.log('@@@@ DELETING A COMMENT !!!', comment);
             await octokit.rest.issues.deleteComment({
               owner,
               repo,
