@@ -177,18 +177,25 @@ const main = async () => {
           comment.user.login === "github-actions[bot]" &&
           comment.body.includes(GITHUB_COMMENT_BOT_PREFIX)
         ) {
-          console.log("@@@ DELETING A COMMENT !!!", {
-            owner,
-            repo,
-            comment_id: comment.id,
-          }, comment);
-
           try {
-            await octokit.rest.issues.deleteComment({
-              owner: "github",
+            console.log("@@@ DELETING A COMMENT !!!", {
+              owner,
               repo,
               comment_id: comment.id,
-            });
+            }, comment);
+            await octokit.request(`DELETE /repos/${owner}/${repo}/issues/comments/${comment.id}`, {
+              owner,
+              repo,
+              comment_id: comment.id,
+              headers: {
+                'X-GitHub-Api-Version': '2022-11-28'
+              }
+            })
+            // await octokit.rest.issues.deleteComment({
+            //   owner,
+            //   repo,
+            //   comment_id: comment.id,
+            // });
           } catch (error) {
             console.error("@@@ Error while deleting comment !!!", error);
           }
