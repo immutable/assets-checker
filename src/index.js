@@ -49,16 +49,6 @@ const main = async () => {
     let ignoreArray = [];
     let myOutput = "";
     let myError = "";
-    const options = {};
-
-    options.listeners = {
-      stdout: (data) => {
-        myOutput += data.toString();
-      },
-      stderr: (data) => {
-        myError += data.toString();
-      },
-    };
 
     /**
      * Check if array assets file name contains inside .ignore-assets file or not.
@@ -90,7 +80,16 @@ const main = async () => {
     await exec.exec(
       `find ${inputs.target_folder} -type f \( -name "*.jpeg" -o -name "*.png" -o -name "*.svg" -o -name "*.gif" -o -name "*.jpg" \) -size +${inputs.thrashold_size}k -exec ls -lh {} \;`,
       undefined,
-      options
+      {
+        listeners: {
+          stdout: (data) => {
+            myOutput += data.toString();
+          },
+          stderr: (data) => {
+            myError += data.toString();
+          },
+        }
+      }
     );
 
     const arrayOutput = getAssetsIgnoreFiles(myOutput.split("\n"));
