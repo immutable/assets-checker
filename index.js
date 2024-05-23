@@ -106,7 +106,7 @@ const main = async () => {
         if(fileName && fileSize) filteredFiles.push([fileName, fileSize]);
       }
 
-      let res = `### Invalid Files\n|File Name|File Size|\n|-----|:-----:|\n`;
+      let res = `### Oversized Assets\n|File Name|File Size|\n|-----|:-----:|\n`;
       for(let item of filteredFiles) {
         res += `|${item[0]}|${item[1]}|\n`
       }
@@ -157,6 +157,29 @@ const main = async () => {
         });
       }
     }
+
+    /**
+     * Delete previously posted github comments.
+     */
+    const removePreviousBotComments = async () => {
+      octokit.rest.issues.listComments({
+        owner,
+        repo,
+        issue_number: issueNumber
+      }).then(({ data }) => {
+        for(let item of data) {
+          if(item.user.login === "github-actions[bot]") {
+            octokit.rest.issues.deleteComment({
+              owner,
+              repo,
+              comment_id: item.id
+            });
+          }
+        }
+      })
+    }
+
+    await removePreviousBotComments();
 
     if(count > 0) {
       octokit.rest.issues.createComment({

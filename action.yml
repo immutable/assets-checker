@@ -1,11 +1,11 @@
 name: 'Assets Checker'
 description: 'A Github Action to Analyse your static image files and warns if the size increase the threshold size. It check for .jpg, .svg, .png, .gif, .jpeg files.'
-author: 'BharatPe'
+author: 'biom3'
 inputs:
   target_folder:
     description: 'The path of directory which contains all your assets ex. src/assets'
     required: true
-    default: src/assets
+    default: src
   thrashold_size:
     description: 'Maximum size of assets allowed in Kb ex. 100'
     required: true
@@ -14,5 +14,5 @@ inputs:
     description: 'The token to use to access the GitHub API'
     required: true
 runs:
-  using: 'node16'
+  using: 'node18'
   main: 'dist/index.js'

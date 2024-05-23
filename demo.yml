@@ -6,11 +6,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         with:
-          node-version: '14.15.0'
-      - uses: bharatpe/assets-checker@main
+          node-version: 18
+      - uses: immutable/assets-checker@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          target_folder: src/assets
-          thrashold_size: 100
+          target_folder: src/
+          thrashold_size: 1000
