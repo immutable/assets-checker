@@ -4,7 +4,7 @@ const exec = require("@actions/exec");
 const { Octokit } = require("@octokit/rest");
 const fs = require('fs');
 
-const GITHUB_COMMENT_BOT_PREFIX = `## AssetsCheckerBot\n`;
+const GITHUB_COMMENT_BOT_PREFIX = `AssetsCheckerBot`;
 const convertBytes = function(bytes) {
   const sizes = ["Bytes", "KB", "MB", "GB", "TB"]
 
@@ -95,8 +95,8 @@ const main = async () => {
 
     const invalidFiles = [...arrayOutput];
 
-    const successBody = `${GITHUB_COMMENT_BOT_PREFIX}Woohooo :rocket: !!! Congratulations, your all assets are less than ${inputs.thrashold_size}Kb.`
-    const errorBody = `${GITHUB_COMMENT_BOT_PREFIX}Oops :eyes: !!! You have ${count} assets with size more than ${inputs.thrashold_size}Kb. Please optimize them. If you unable to optimize these assets, you can use .assets-ignore file and add these assets in .assets-ignore file. For more details read readme`
+    const successBody = `##${GITHUB_COMMENT_BOT_PREFIX}\n:rocket: Congratulations, your all assets are less than ${inputs.thrashold_size}Kb.`
+    const errorBody = `##${GITHUB_COMMENT_BOT_PREFIX}\n:eyes: Oops, You have ${count} assets with size more than ${inputs.thrashold_size}Kb. Please optimize them. If you unable to optimize these assets, you can use .assets-ignore file and add these assets in .assets-ignore file`
 
     const getTableDataString = (invalidFiles) => {
       let filteredFiles = [];
@@ -122,7 +122,7 @@ const main = async () => {
      */
     const getAllIgnoredFileString = (ignoreArray) => {
       return new Promise((resolve, reject) => {
-        let res = `${GITHUB_COMMENT_BOT_PREFIX}### All .assets-ignored Files\n|File Name|File Size\n|-----|:-----:|\n`;
+        let res = `##${GITHUB_COMMENT_BOT_PREFIX}\n### All .assets-ignored Files\n|File Name|File Size\n|-----|:-----:|\n`;
         for(let index=0; index < ignoreArray.length; index++) {
           const item = ignoreArray[index];
 
