@@ -13361,11 +13361,9 @@ const main = async () => {
       return sourceArray;
     }
 
-    // @TODO: add webp and rive to this asset list
+    // @TODO: add webp + riv to this asset list
     await exec.exec(
       `find ${inputs.target_folder} -type f \( -name "*.jpeg" -o -name "*.png" -o -name "*.svg" -o -name "*.gif" -o -name "*.jpg" \) -size +${inputs.thrashold_size}k -exec ls -lh {} \;`,
-      null,
-      options,
     );
 
     const arrayOutput = getAssetsIgnoreFiles(myOutput.split("\n"));
@@ -13387,7 +13385,7 @@ const main = async () => {
       }
 
       let res =
-        `## ${GITHUB_COMMENT_BOT_PREFIX}\n### Oversized Assets\n|File Name|File Size|\n|-----|:-----:|\n`;
+        `## ${GITHUB_COMMENT_BOT_PREFIX}\nOversized Assets\n|File Name|File Size|\n|-----|:-----:|\n`;
       for (const item of filteredFiles) {
         res += `|${item[0]}|${item[1]}|\n`;
       }
@@ -13402,7 +13400,7 @@ const main = async () => {
      */
     const getAllIgnoredFileString = (ignoreArray) => {
       return new Promise((resolve, reject) => {
-        let res = `## ${GITHUB_COMMENT_BOT_PREFIX}\n### All .assets-ignored Files\n|File Name|File Size\n|-----|:-----:|\n`;
+        let res = `## ${GITHUB_COMMENT_BOT_PREFIX}\nAll .assets-ignored Files\n|File Name|File Size\n|-----|:-----:|\n`;
         for (let index = 0; index < ignoreArray.length; index++) {
           const item = ignoreArray[index];
 
