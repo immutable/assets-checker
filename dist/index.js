@@ -13385,7 +13385,8 @@ const main = async () => {
         if (fileName && fileSize) filteredFiles.push([fileName, fileSize]);
       }
 
-      let res = "### Oversized Assets\n|File Name|File Size|\n|-----|:-----:|\n";
+      let res =
+        "### Oversized Assets\n|File Name|File Size|\n|-----|:-----:|\n";
       for (const item of filteredFiles) {
         res += `|${item[0]}|${item[1]}|\n`;
       }
