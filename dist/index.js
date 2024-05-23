@@ -13136,6 +13136,14 @@ module.exports = require("net");
 
 /***/ }),
 
+/***/ 7561:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("node:fs");
+
+/***/ }),
+
 /***/ 2037:
 /***/ ((module) => {
 
@@ -13269,32 +13277,31 @@ const core = __nccwpck_require__(2186);
 const github = __nccwpck_require__(5438);
 const exec = __nccwpck_require__(1514);
 const { Octokit } = __nccwpck_require__(5375);
-const fs = __nccwpck_require__(7147);
+const fs = __nccwpck_require__(7561);
 
-const GITHUB_COMMENT_BOT_PREFIX = 'AssetsCheckerBot';
-const convertBytes = function(bytes) {
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB"]
+const GITHUB_COMMENT_BOT_PREFIX = ":robot: AssetsCheckerBot";
+const convertBytes = (bytes) => {
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
 
-  if (bytes == 0) {
-    return "n/a"
+  if (bytes === 0) {
+    return "n/a";
   }
 
-  const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
+  const i = Number.parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
 
-  if (i == 0) {
-    return bytes + " " + sizes[i]
+  if (i === 0) {
+    return `${bytes} ${sizes[i]}`;
   }
 
-  return (bytes / Math.pow(1024, i)).toFixed(1) + " " + sizes[i]
-}
+  return `${(bytes / 1024 ** i).toFixed(1)} ${sizes[i]}`;
+};
 
 const main = async () => {
   try {
-
     const inputs = {
       token: core.getInput("token"),
       target_folder: core.getInput("target_folder"),
-      thrashold_size: core.getInput("thrashold_size")
+      thrashold_size: core.getInput("thrashold_size"),
     };
 
     const {
@@ -13315,8 +13322,8 @@ const main = async () => {
     });
 
     let ignoreArray = [];
-    let myOutput = '';
-    let myError = '';
+    let myOutput = "";
+    let myError = "";
     const options = {};
 
     options.listeners = {
@@ -13325,27 +13332,27 @@ const main = async () => {
       },
       stderr: (data) => {
         myError += data.toString();
-      }
+      },
     };
 
     /**
      * Check if array assets file name contains inside .ignore-assets file or not.
      * If its contains then remove those images from sourceArray and return new array.
-     * 
+     *
      * @param {Array} sourceArray Array of all assets files.
      * @returns Array of files.
      */
     function getAssetsIgnoreFiles(sourceArray) {
-      const file=`.assets-ignore`;
+      const file = ".assets-ignore";
       try {
         ignoreArray = fs.readFileSync(file).toString().split("\n");
 
         if (ignoreArray.length > 0) {
-          return sourceArray.filter (v => {
-            const fileName = v.split(" ").slice(-1).pop()
+          return sourceArray.filter((v) => {
+            const fileName = v.split(" ").slice(-1).pop();
             if (!fileName) return true;
             return ignoreArray.indexOf(fileName) === -1;
-          })
+          });
         }
       } catch (e) {
         // File not found exception.
@@ -13354,7 +13361,11 @@ const main = async () => {
       return sourceArray;
     }
 
-    await exec.exec(`find ${inputs.target_folder} -type f \( -name "*.jpeg" -o -name "*.png" -o -name "*.svg" -o -name "*.gif" -o -name "*.jpg" \) -size +${inputs.thrashold_size}k -exec ls -lh {} \;`, null, options);
+    await exec.exec(
+      `find ${inputs.target_folder} -type f \( -name "*.jpeg" -o -name "*.png" -o -name "*.svg" -o -name "*.gif" -o -name "*.jpg" \) -size +${inputs.thrashold_size}k -exec ls -lh {} \;`,
+      null,
+      options,
+    );
 
     const arrayOutput = getAssetsIgnoreFiles(myOutput.split("\n"));
 
@@ -13362,56 +13373,56 @@ const main = async () => {
 
     const invalidFiles = [...arrayOutput];
 
-    const successBody = `## ${GITHUB_COMMENT_BOT_PREFIX}\n:rocket: Congratulations, your all assets are less than ${inputs.thrashold_size}Kb.`
-    const errorBody = `## ${GITHUB_COMMENT_BOT_PREFIX}\n:eyes: Oops, You have ${count} assets with size more than ${inputs.thrashold_size}Kb. Please optimize them. If you unable to optimize these assets, you can use .assets-ignore file and add these assets in .assets-ignore file`
+    const successBody = `## ${GITHUB_COMMENT_BOT_PREFIX}\n:rocket: Congratulations, your all assets are less than ${inputs.thrashold_size}Kb.`;
+    const errorBody = `## ${GITHUB_COMMENT_BOT_PREFIX}\n:eyes: Oops, You have ${count} assets with size more than ${inputs.thrashold_size}Kb. Please optimize them. If you unable to optimize these assets, you can use .assets-ignore file and add these assets in .assets-ignore file`;
 
     const getTableDataString = (invalidFiles) => {
-      let filteredFiles = [];
+      const filteredFiles = [];
 
-      for(let item of invalidFiles) {
+      for (const item of invalidFiles) {
         const fileName = item.split(" ").slice(-1).pop();
         const fileSize = item.split(" ")[4];
-        if(fileName && fileSize) filteredFiles.push([fileName, fileSize]);
+        if (fileName && fileSize) filteredFiles.push([fileName, fileSize]);
       }
 
-      let res = `### Oversized Assets\n|File Name|File Size|\n|-----|:-----:|\n`;
-      for(let item of filteredFiles) {
-        res += `|${item[0]}|${item[1]}|\n`
+      let res = "### Oversized Assets\n|File Name|File Size|\n|-----|:-----:|\n";
+      for (const item of filteredFiles) {
+        res += `|${item[0]}|${item[1]}|\n`;
       }
       return res;
     };
 
     /**
      * Get all Ignored file data as github comment string format.
-     * 
+     *
      * @param {Array} ignoreArray array of files which is added in .assets-ignore file.
      * @returns Promise of github comment string.
      */
     const getAllIgnoredFileString = (ignoreArray) => {
       return new Promise((resolve, reject) => {
         let res = `## ${GITHUB_COMMENT_BOT_PREFIX}\n### All .assets-ignored Files\n|File Name|File Size\n|-----|:-----:|\n`;
-        for(let index=0; index < ignoreArray.length; index++) {
+        for (let index = 0; index < ignoreArray.length; index++) {
           const item = ignoreArray[index];
 
           fs.stat(item, (err, fileStats) => {
             if (err) {
-              res += `|${item}|None|\n`
+              res += `|${item}|None|\n`;
             } else {
-              const result = convertBytes(fileStats.size)
-              res += `|${item}|${result}|\n`
+              const result = convertBytes(fileStats.size);
+              res += `|${item}|${result}|\n`;
             }
 
-            if (index === ignoreArray.length-1) {
+            if (index === ignoreArray.length - 1) {
               resolve(res);
             }
-          })
+          });
         }
-      })
+      });
     };
 
     /**
      * Publish .assets-ignore entries in github comment.
-     * 
+     *
      * @param {Array} ignoreArray array of files which is added in .assets-ignore file.
      */
     const publishIgnoreAssetsTable = async (ignoreArray) => {
@@ -13424,36 +13435,40 @@ const main = async () => {
           body,
         });
       }
-    }
+    };
 
     /**
      * Delete previously posted github comments.
      */
     const removePreviousBotComments = async () => {
-      octokit.rest.issues.listComments({
+      const { data: comments } = await octokit.rest.issues.listComments({
         owner,
         repo,
-        issue_number: issueNumber
-      }).then(async ({ data }) => {
-        for (let comment of data) {
-          if (
-            comment.user.login === 'github-actions[bot]' 
-            && comment.body.includes(GITHUB_COMMENT_BOT_PREFIX)
-          ) {
-            console.log('@@@@ DELETING A COMMENT !!!', comment);
+        issue_number: issueNumber,
+      });
+      for (const comment of comments) {
+        if (
+          comment.user.login === "github-actions[bot]" &&
+          comment.body.includes(GITHUB_COMMENT_BOT_PREFIX)
+        ) {
+          console.log("@@@@ DELETING A COMMENT !!!", comment);
+
+          try {
             await octokit.rest.issues.deleteComment({
               owner,
               repo,
-              comment_id: comment.id
+              comment_id: comment.id,
             });
+          } catch (error) {
+            console.log("Error while deleting comment", error);
           }
         }
-      })
-    }
+      }
+    };
 
     await removePreviousBotComments();
 
-    if(count > 0) {
+    if (count > 0) {
       octokit.rest.issues.createComment({
         owner,
         repo,
@@ -13469,8 +13484,8 @@ const main = async () => {
       });
 
       await publishIgnoreAssetsTable(ignoreArray);
-      core.setFailed('Invalid size assets exists !!!');
-    }else {
+      core.setFailed("Invalid size assets exists !!!");
+    } else {
       octokit.rest.issues.createComment({
         owner,
         repo,
@@ -13480,7 +13495,6 @@ const main = async () => {
 
       await publishIgnoreAssetsTable(ignoreArray);
     }
-
   } catch (error) {
     core.setFailed(error.message);
   }

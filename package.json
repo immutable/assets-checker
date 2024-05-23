@@ -5,7 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "ncc build index.js -o dist"
+    "build": "ncc build index.js -o dist",
+    "typecheck": "tsc --noEmit",
+    "lint": "npm run typecheck && npm run lint:check",
+    "lint:check": "biome check ./",
+    "lint:check:fix": "biome check --apply ./",
+    "format:fix": "biome format --write ./"
   },
   "repository": {
     "type": "git",
@@ -22,6 +27,7 @@
     "@actions/core": "^1.9.1",
     "@actions/exec": "^1.1.1",
     "@actions/github": "^5.0.3",
+    "@biomejs/biome": "^1.7.3",
     "@octokit/rest": "^19.0.4",
     "@vercel/ncc": "^0.34.0"
   }
