@@ -13374,7 +13374,7 @@ const main = async () => {
 
     const successBody = `:green_circle: **Awesome**, all of your image assets are less than \`${inputs.thrashold_size}Kb\`.`;
     const errorBody = `:warning: **Oh Snap!**, You have ${count} image asset(s) with a file-size of more than \`${inputs.thrashold_size}Kb\`. 
-If you unable to optimize these assets, you can use \`.assets-ignore\` file and add these assets in \`.assets-ignore\` file`;
+If it's not possible to optimize the below assets, you can add them into a \`.assets-ignore\` file in the root of your repository`;
 
     const getTableDataString = (invalidFiles) => {
       const filteredFiles = [];
