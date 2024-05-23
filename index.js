@@ -4,7 +4,7 @@ const exec = require("@actions/exec");
 const { Octokit } = require("@octokit/rest");
 const fs = require('fs');
 
-const GITHUB_COMMENT_BOT_PREFIX = `AssetsCheckerBot`;
+const GITHUB_COMMENT_BOT_PREFIX = 'AssetsCheckerBot';
 const convertBytes = function(bytes) {
   const sizes = ["Bytes", "KB", "MB", "GB", "TB"]
 
@@ -169,8 +169,10 @@ const main = async () => {
         issue_number: issueNumber
       }).then(({ data }) => {
         for(let comment of data) {
-          console.log('@@@@@@@', comment.user, comment.body);
-          if(comment.body.includes(GITHUB_COMMENT_BOT_PREFIX)) {
+          if(
+            comment.user.login === 'github-actions[bot]' 
+            && comment.body.includes(GITHUB_COMMENT_BOT_PREFIX)
+          ) {
             octokit.rest.issues.deleteComment({
               owner,
               repo,
