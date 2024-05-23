@@ -13401,7 +13401,7 @@ const main = async () => {
      */
     const getAllIgnoredFileString = (ignoreArray) => {
       return new Promise((resolve, reject) => {
-        let res = "**All .assets-ignored Files**\n|File Name|File Size\n|-----|:-----:|\n";
+        let res = "**All listed `.assets-ignored` Files**\n|File Name|File Size\n|-----|:-----:|\n";
         for (let index = 0; index < ignoreArray.length; index++) {
           const item = ignoreArray[index];
 
