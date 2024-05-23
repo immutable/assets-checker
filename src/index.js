@@ -112,7 +112,7 @@ const main = async () => {
       }
 
       let res =
-        "### Oversized Assets\n|File Name|File Size|\n|-----|:-----:|\n";
+        "## ${GITHUB_COMMENT_BOT_PREFIX}\n### Oversized Assets\n|File Name|File Size|\n|-----|:-----:|\n";
       for (const item of filteredFiles) {
         res += `|${item[0]}|${item[1]}|\n`;
       }
@@ -195,6 +195,8 @@ const main = async () => {
 
     await removePreviousBotComments();
 
+    // @TODO: combine all comments into a single comment 
+    // (its easier to read and manage)
     if (count > 0) {
       octokit.rest.issues.createComment({
         owner,
@@ -219,8 +221,6 @@ const main = async () => {
         issue_number: issueNumber,
         body: successBody,
       });
-
-      await publishIgnoreAssetsTable(ignoreArray);
     }
   } catch (error) {
     core.setFailed(error.message);
