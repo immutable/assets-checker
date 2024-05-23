@@ -13279,7 +13279,7 @@ const exec = __nccwpck_require__(1514);
 const { Octokit } = __nccwpck_require__(5375);
 const fs = __nccwpck_require__(7561);
 
-const GITHUB_COMMENT_BOT_PREFIX = "AssetsCheckerBot";
+const GITHUB_COMMENT_BOT_PREFIX = "AssetsCheckBot";
 const convertBytes = (bytes) => {
   const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
 
