@@ -4,6 +4,7 @@ const exec = require("@actions/exec");
 const { Octokit } = require("@octokit/rest");
 const fs = require('fs');
 
+const GITHUB_COMMENT_BOT_PREFIX = `### :robot_face: AssetsCheckerBot\n`;
 const convertBytes = function(bytes) {
   const sizes = ["Bytes", "KB", "MB", "GB", "TB"]
 
@@ -94,8 +95,8 @@ const main = async () => {
 
     const invalidFiles = [...arrayOutput];
 
-    const successBody = ` Woohooo :rocket: !!! Congratulations, your all assets are less than ${inputs.thrashold_size}Kb.`
-    const errorBody = `Oops :eyes: !!! You have ${count} assets with size more than ${inputs.thrashold_size}Kb. Please optimize them. If you unable to optimize these assets, you can use .assets-ignore file and add these assets in .assets-ignore file. For more details read readme`
+    const successBody = `${GITHUB_COMMENT_BOT_PREFIX}Woohooo :rocket: !!! Congratulations, your all assets are less than ${inputs.thrashold_size}Kb.`
+    const errorBody = `${GITHUB_COMMENT_BOT_PREFIX}Oops :eyes: !!! You have ${count} assets with size more than ${inputs.thrashold_size}Kb. Please optimize them. If you unable to optimize these assets, you can use .assets-ignore file and add these assets in .assets-ignore file. For more details read readme`
 
     const getTableDataString = (invalidFiles) => {
       let filteredFiles = [];
@@ -121,7 +122,7 @@ const main = async () => {
      */
     const getAllIgnoredFileString = (ignoreArray) => {
       return new Promise((resolve, reject) => {
-        let res = `### All .assets-ignored Files\n|File Name|File Size\n|-----|:-----:|\n`;
+        let res = `${GITHUB_COMMENT_BOT_PREFIX}### All .assets-ignored Files\n|File Name|File Size\n|-----|:-----:|\n`;
         for(let index=0; index < ignoreArray.length; index++) {
           const item = ignoreArray[index];
 
@@ -167,12 +168,12 @@ const main = async () => {
         repo,
         issue_number: issueNumber
       }).then(({ data }) => {
-        for(let item of data) {
-          if(item.user.login === "github-actions[bot]") {
+        for(let comment of data) {
+          if(comment.user.login === "github-actions[bot]" && comment.body.includes(GITHUB_COMMENT_BOT_PREFIX)) {
             octokit.rest.issues.deleteComment({
               owner,
               repo,
-              comment_id: item.id
+              comment_id: comment.id
             });
           }
         }
@@ -197,7 +198,6 @@ const main = async () => {
       });
 
       await publishIgnoreAssetsTable(ignoreArray);
-
       core.setFailed('Invalid size assets exists !!!');
     }else {
       octokit.rest.issues.createComment({
