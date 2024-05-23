@@ -186,8 +186,7 @@ If you unable to optimize these assets, you can use \`.assets-ignore\` file and 
     await removePreviousBotComments();
 
     const checkSuccess = count === 0;
-    const commentBody = `# ${checkSuccess ? ':mountain:' : ':warning:'}
-## ${GITHUB_COMMENT_BOT_PREFIX}
+    const commentBody = `# ${checkSuccess ? ':mountain:' : ':warning:'} ${GITHUB_COMMENT_BOT_PREFIX}
 ${checkSuccess ? successBody : `${errorBody}
 
 ${getTableDataString(invalidFiles)}
