@@ -86,6 +86,7 @@ const main = async () => {
       return sourceArray;
     }
 
+    // @TODO: add webp and rive to this asset list
     await exec.exec(
       `find ${inputs.target_folder} -type f \( -name "*.jpeg" -o -name "*.png" -o -name "*.svg" -o -name "*.gif" -o -name "*.jpg" \) -size +${inputs.thrashold_size}k -exec ls -lh {} \;`,
       null,
