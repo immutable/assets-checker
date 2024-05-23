@@ -98,8 +98,8 @@ const main = async () => {
 
     const invalidFiles = [...arrayOutput];
 
-    const successBody = `**Awesome**, your all assets are less than ${inputs.thrashold_size}Kb.`;
-    const errorBody = `**Oh, Snap**, You have ${count} asset(s) with size more than \`${inputs.thrashold_size}Kb\`. If you unable to optimize these assets, you can use \`.assets-ignore\` file and add these assets in \`.assets-ignore\` file`;
+    const successBody = `:green_cricle: **Awesome**, your all assets are less than ${inputs.thrashold_size}Kb.`;
+    const errorBody = `:warning: **Oh, Snap**, You have ${count} asset(s) with size more than \`${inputs.thrashold_size}Kb\`. If you unable to optimize these assets, you can use \`.assets-ignore\` file and add these assets in \`.assets-ignore\` file`;
 
     const getTableDataString = (invalidFiles) => {
       const filteredFiles = [];
@@ -132,7 +132,7 @@ const main = async () => {
 
           fs.stat(item, (err, fileStats) => {
             if (err) {
-              res += `|${item}|None|\n`;
+              res += "|-|-|\n";
             } else {
               const result = convertBytes(fileStats.size);
               res += `|${item}|${result}|\n`;
