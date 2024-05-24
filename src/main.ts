@@ -20,7 +20,7 @@ function convertBytes(bytes: number) {
   return `${(bytes / 1024 ** i).toFixed(1)} ${sizes[i]}`;
 }
 
-const main = async () => {
+async function main() {
   try {
     const inputs = {
       token: getInput("token"),
@@ -100,7 +100,7 @@ If it's not possible to optimize the below assets, you can add them into a \`.as
 **\@NOTE:** If you are using Biome [image](https://immutable.atlassian.net/wiki/spaces/DS/pages/2547024003/Optimising+images+for+the+web#How-BIOME-makes-working-with-images-easier) components to display these assets, and you are not opting out of their default functionality, you can safely ignore this warning - as these images will be optimized on-the-fly by our AWS Image Resizer infrastructure. More details [here](https://immutable.atlassian.net/wiki/spaces/DS/pages/2547024003/Optimising+images+for+the+web#How-BIOME-makes-working-with-images-easier).
 `;
 
-    const getTableDataString = (invalidFiles: string[]) => {
+    function getTableDataString(invalidFiles: string[]) {
       const filteredFiles = [];
 
       for (const item of invalidFiles) {
@@ -115,15 +115,9 @@ If it's not possible to optimize the below assets, you can add them into a \`.as
         res += `|${item[0]}|${item[1]}|\n`;
       }
       return res;
-    };
+    }
 
-    /**
-     * Get all Ignored file data as github comment string format.
-     *
-     * @param {Array} ignoreArray array of files which is added in .assets-ignore file.
-     * @returns Promise of github comment string.
-     */
-    const getAllIgnoredFileString = (ignoreArray: string[]) => {
+    function getAllIgnoredFileString(ignoreArray: string[]) {
       return new Promise((resolve, reject) => {
         let res =
           "**All listed `.assets-ignored` Files**\n|File Name|File Size\n|-----|:-----:|\n";
@@ -144,12 +138,9 @@ If it's not possible to optimize the below assets, you can add them into a \`.as
           });
         }
       });
-    };
+    }
 
-    /**
-     * Delete previously posted github comments.
-     */
-    const removePreviousBotComments = async () => {
+    async function removePreviousBotComments() {
       const { data: comments } = await octokit.rest.issues.listComments({
         owner,
         repo,
@@ -184,7 +175,7 @@ If it's not possible to optimize the below assets, you can add them into a \`.as
           }
         }
       }
-    };
+    }
 
     await removePreviousBotComments();
 
@@ -213,6 +204,6 @@ ${await getAllIgnoredFileString(ignoreArray)}`
     const errorMessage = (error as { message: string }).message;
     setFailed(errorMessage);
   }
-};
+}
 
 main();
