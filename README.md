@@ -8,7 +8,6 @@ or
 
 ## Build
 ```
-npm i @vercel/ncc -g
 npm run build
 ```
 
