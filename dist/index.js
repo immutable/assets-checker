@@ -13317,7 +13317,6 @@ var external_node_fs_default = /*#__PURE__*/__nccwpck_require__.n(external_node_
 var core = __nccwpck_require__(2186);
 // EXTERNAL MODULE: ./node_modules/@actions/exec/lib/exec.js
 var exec = __nccwpck_require__(1514);
-var exec_default = /*#__PURE__*/__nccwpck_require__.n(exec);
 // EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
 var github = __nccwpck_require__(5438);
 // EXTERNAL MODULE: ./node_modules/@octokit/rest/dist-node/index.js
@@ -13395,7 +13394,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             }
             return sourceArray;
         }
-        yield exec_default().exec(`find ${inputs.target_folder} -type f \( -name "*.jpeg" -o -name "*.png" -o -name "*.svg" -o -name "*.gif" -o -name "*.jpg" -o -name "*.riv" -o -name "*.webp" \) -size +${inputs.thrashold_size}k -exec ls -lh {} \;`, undefined, {
+        yield (0,exec.exec)(`find ${inputs.target_folder} -type f \( -name "*.jpeg" -o -name "*.png" -o -name "*.svg" -o -name "*.gif" -o -name "*.jpg" -o -name "*.riv" -o -name "*.webp" \) -size +${inputs.thrashold_size}k -exec ls -lh {} \;`, undefined, {
             listeners: {
                 stdout: (data) => {
                     myOutput += data.toString();

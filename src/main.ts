@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import { error, getInput, setFailed } from "@actions/core";
-import exec from "@actions/exec";
+import { exec } from "@actions/exec";
 import { context } from "@actions/github";
 import { Octokit } from "@octokit/rest";
 
@@ -76,7 +76,7 @@ const main = async () => {
       return sourceArray;
     }
 
-    await exec.exec(
+    await exec(
       `find ${inputs.target_folder} -type f \( -name "*.jpeg" -o -name "*.png" -o -name "*.svg" -o -name "*.gif" -o -name "*.jpg" -o -name "*.riv" -o -name "*.webp" \) -size +${inputs.thrashold_size}k -exec ls -lh {} \;`,
       undefined,
       {
