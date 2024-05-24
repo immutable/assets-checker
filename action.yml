@@ -6,7 +6,7 @@ inputs:
     description: 'The path of directory which contains all your assets ex. src/assets'
     required: true
     default: src
-  thrashold_size:
+  threshold_size:
     description: 'Maximum size of assets allowed in Kb ex. 100'
     required: true
     default: 100
