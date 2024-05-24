@@ -1,5 +1,5 @@
 # Assets Checker
-A Github Action to Analyse your static image files on generating Pull Request and warns if the size increase the threshold size. It check for .jpg, .svg, .png, .gif, .jpeg files. 
+A Github Action to Analyse your static image files on generating Pull Request and warns if the size increase the threshold size. It check for .jpg, .svg, .png, .gif, .jpeg, .webp, and .riv files. 
 
 ## Install
 ```npm i```
