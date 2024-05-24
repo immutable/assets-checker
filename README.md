@@ -21,9 +21,7 @@ npm run build
 ![Screenshot 2024-05-23 at 4 30 21 PM](https://github.com/immutable/assets-checker/assets/1452237/7e39fbe3-af4a-43ff-a16a-e5e0a84321f9)
 
 ### .assets-ignore file
-Might be we have some images which size greater then the threshold we provided, in this case we can ignore these files by using .assets-ignore file.
-
-#### .assets-ignore file must present inside the root directory of your repo :
+Sometimes its not possible to optimise an image, or you may not need to because you're utilising Biome's inbuilt `aws-image-resizer` functionality. In cases like these, we can ignore these files by using a .assets-ignore file inside the root of the repository.
 
 <img width="300" alt="Screenshot 2022-08-24 at 4 49 39 PM" src="https://user-images.githubusercontent.com/61680562/240576818-7326f846-7d78-43e1-8b21-db96b9cb27a0.png">
 
@@ -35,4 +33,5 @@ Might be we have some images which size greater then the threshold we provided, 
 Check [Demo.yml](./demo.yml) for complete configuration(on using github actions)
 
 ## License
+
 The scripts and documentation in this project are released under the [MIT License](./LICENSE)
