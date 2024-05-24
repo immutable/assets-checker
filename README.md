@@ -1,5 +1,7 @@
-# Assets Checker
-A Github Action to Analyse your static image files on generating Pull Request and warns if the size increase the threshold size. It check for .jpg, .svg, .png, .gif, .jpeg, .webp, and .riv files. 
+# Assets Check Bot
+This repository hosts a simple github action to analyse your repository for static image files when generating a pull request and then warns when it finds images which are over the file-size threshold. 
+
+It currently checks all .jpg, .svg, .png, .gif, .jpeg, .webp, and .riv files. 
 
 ## Install
 ```bash
