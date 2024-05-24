@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import { error, getInput, setFailed } from "@actions/core";
 import exec from "@actions/exec";
-import github from "@actions/github";
+import { context } from "@actions/github";
 import { Octokit } from "@octokit/rest";
 
 const GITHUB_COMMENT_BOT_PREFIX = "AssetsCheckBot";
@@ -31,7 +31,7 @@ const main = async () => {
 
     const {
       payload: { pull_request: pullRequest, repository },
-    } = github.context;
+    } = context;
 
     if (!pullRequest) {
       error("This action only works on pull_request events");

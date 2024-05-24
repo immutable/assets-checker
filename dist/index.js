@@ -13320,7 +13320,6 @@ var exec = __nccwpck_require__(1514);
 var exec_default = /*#__PURE__*/__nccwpck_require__.n(exec);
 // EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
 var github = __nccwpck_require__(5438);
-var github_default = /*#__PURE__*/__nccwpck_require__.n(github);
 // EXTERNAL MODULE: ./node_modules/@octokit/rest/dist-node/index.js
 var dist_node = __nccwpck_require__(5375);
 ;// CONCATENATED MODULE: ./src/main.ts
@@ -13357,7 +13356,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             target_folder: (0,core.getInput)("target_folder"),
             thrashold_size: (0,core.getInput)("thrashold_size"),
         };
-        const { payload: { pull_request: pullRequest, repository }, } = (github_default()).context;
+        const { payload: { pull_request: pullRequest, repository }, } = github.context;
         if (!pullRequest) {
             (0,core.error)("This action only works on pull_request events");
             return;
