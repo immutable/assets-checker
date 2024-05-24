@@ -5637,9 +5637,10 @@ exports.request = request;
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
+var __webpack_unused_export__;
 
 
-Object.defineProperty(exports, "__esModule", ({ value: true }));
+__webpack_unused_export__ = ({ value: true });
 
 var core = __nccwpck_require__(4952);
 var pluginRequestLog = __nccwpck_require__(8883);
@@ -5652,7 +5653,7 @@ const Octokit = core.Octokit.plugin(pluginRequestLog.requestLog, pluginRestEndpo
   userAgent: `octokit-rest.js/${VERSION}`
 });
 
-exports.Octokit = Octokit;
+exports.v = Octokit;
 //# sourceMappingURL=index.js.map
 
 
@@ -13136,14 +13137,6 @@ module.exports = require("net");
 
 /***/ }),
 
-/***/ 7561:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("node:fs");
-
-/***/ }),
-
 /***/ 2037:
 /***/ ((module) => {
 
@@ -13265,221 +13258,260 @@ module.exports = JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45,46],"valid"]
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__nccwpck_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__nccwpck_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__nccwpck_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__nccwpck_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/compat */
 /******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
-const core = __nccwpck_require__(2186);
-const github = __nccwpck_require__(5438);
-const exec = __nccwpck_require__(1514);
-const { Octokit } = __nccwpck_require__(5375);
-const fs = __nccwpck_require__(7561);
+"use strict";
+// ESM COMPAT FLAG
+__nccwpck_require__.r(__webpack_exports__);
+
+;// CONCATENATED MODULE: external "node:fs"
+const external_node_fs_namespaceObject = require("node:fs");
+var external_node_fs_default = /*#__PURE__*/__nccwpck_require__.n(external_node_fs_namespaceObject);
+// EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
+var core = __nccwpck_require__(2186);
+var core_default = /*#__PURE__*/__nccwpck_require__.n(core);
+// EXTERNAL MODULE: ./node_modules/@actions/exec/lib/exec.js
+var exec = __nccwpck_require__(1514);
+var exec_default = /*#__PURE__*/__nccwpck_require__.n(exec);
+// EXTERNAL MODULE: ./node_modules/@actions/github/lib/github.js
+var github = __nccwpck_require__(5438);
+var github_default = /*#__PURE__*/__nccwpck_require__.n(github);
+// EXTERNAL MODULE: ./node_modules/@octokit/rest/dist-node/index.js
+var dist_node = __nccwpck_require__(5375);
+;// CONCATENATED MODULE: ./src/main.ts
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+
 
 const GITHUB_COMMENT_BOT_PREFIX = "AssetsCheckBot";
 const convertBytes = (bytes) => {
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-
-  if (bytes === 0) {
-    return "n/a";
-  }
-
-  const i = Number.parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
-
-  if (i === 0) {
-    return `${bytes} ${sizes[i]}`;
-  }
-
-  return `${(bytes / 1024 ** i).toFixed(1)} ${sizes[i]}`;
+    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+    if (bytes === 0) {
+        return "n/a";
+    }
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    if (i === 0) {
+        return `${bytes} ${sizes[i]}`;
+    }
+    return `${(bytes / Math.pow(1024, i)).toFixed(1)} ${sizes[i]}`;
 };
-
-const main = async () => {
-  try {
-    const inputs = {
-      token: core.getInput("token"),
-      target_folder: core.getInput("target_folder"),
-      thrashold_size: core.getInput("thrashold_size"),
-    };
-
-    const {
-      payload: { pull_request: pullRequest, repository },
-    } = github.context;
-
-    if (!pullRequest) {
-      core.error("This action only works on pull_request events");
-      return;
-    }
-
-    const { number: issueNumber } = pullRequest;
-    const { full_name: repoFullName } = repository;
-    const [owner, repo] = repoFullName.split("/");
-
-    const octokit = new Octokit({
-      auth: inputs.token,
-    });
-
-    let ignoreArray = [];
-    let myOutput = "";
-    let myError = "";
-
-    /**
-     * Check if array assets file name contains inside .ignore-assets file or not.
-     * If its contains then remove those images from sourceArray and return new array.
-     *
-     * @param {Array} sourceArray Array of all assets files.
-     * @returns Array of files.
-     */
-    function getAssetsIgnoreFiles(sourceArray) {
-      const file = ".assets-ignore";
-      try {
-        ignoreArray = fs.readFileSync(file).toString().split("\n");
-
-        if (ignoreArray.length > 0) {
-          return sourceArray.filter((v) => {
-            const fileName = v.split(" ").slice(-1).pop();
-            if (!fileName) return true;
-            return ignoreArray.indexOf(fileName) === -1;
-          });
+const main = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const inputs = {
+            token: core_default().getInput("token"),
+            target_folder: core_default().getInput("target_folder"),
+            thrashold_size: core_default().getInput("thrashold_size"),
+        };
+        const { payload: { pull_request: pullRequest, repository }, } = (github_default()).context;
+        if (!pullRequest) {
+            core_default().error("This action only works on pull_request events");
+            return;
         }
-      } catch (e) {
-        // File not found exception.
-      }
-
-      return sourceArray;
-    }
-
-    await exec.exec(
-      `find ${inputs.target_folder} -type f \( -name "*.jpeg" -o -name "*.png" -o -name "*.svg" -o -name "*.gif" -o -name "*.jpg" -o -name "*.riv" -o -name "*.webp" \) -size +${inputs.thrashold_size}k -exec ls -lh {} \;`,
-      undefined,
-      {
-        listeners: {
-          stdout: (data) => {
-            myOutput += data.toString();
-          },
-          stderr: (data) => {
-            myError += data.toString();
-          },
+        const { number: issueNumber } = pullRequest;
+        const repoFullName = (repository === null || repository === void 0 ? void 0 : repository.full_name) || "";
+        const [owner, repo] = repoFullName.split("/");
+        const octokit = new dist_node/* Octokit */.v({
+            auth: inputs.token,
+        });
+        let ignoreArray = [];
+        let myOutput = "";
+        let myError = "";
+        /**
+         * Check if array assets file name contains inside .ignore-assets file or not.
+         * If its contains then remove those images from sourceArray and return new array.
+         *
+         * @param {Array} sourceArray Array of all assets files.
+         * @returns Array of files.
+         */
+        function getAssetsIgnoreFiles(sourceArray) {
+            const file = ".assets-ignore";
+            try {
+                ignoreArray = external_node_fs_default().readFileSync(file).toString().split("\n");
+                if (ignoreArray.length > 0) {
+                    return sourceArray.filter((v) => {
+                        const fileName = v.split(" ").slice(-1).pop();
+                        if (!fileName)
+                            return true;
+                        return ignoreArray.indexOf(fileName) === -1;
+                    });
+                }
+            }
+            catch (e) {
+                // File not found exception.
+            }
+            return sourceArray;
         }
-      }
-    );
-
-    const arrayOutput = getAssetsIgnoreFiles(myOutput.split("\n"));
-
-    const count = arrayOutput.length - 1;
-
-    const invalidFiles = [...arrayOutput];
-
-    const successBody = `:green_circle: **Awesome**, all of your image assets are less than \`${inputs.thrashold_size}Kb\`.`;
-    const errorBody = `:warning: **Oh Snap!**, You have ${count} image asset(s) with a file-size of more than \`${inputs.thrashold_size}Kb\`. 
+        yield exec_default().exec(`find ${inputs.target_folder} -type f \( -name "*.jpeg" -o -name "*.png" -o -name "*.svg" -o -name "*.gif" -o -name "*.jpg" -o -name "*.riv" -o -name "*.webp" \) -size +${inputs.thrashold_size}k -exec ls -lh {} \;`, undefined, {
+            listeners: {
+                stdout: (data) => {
+                    myOutput += data.toString();
+                },
+                stderr: (data) => {
+                    myError += data.toString();
+                },
+            },
+        });
+        const arrayOutput = getAssetsIgnoreFiles(myOutput.split("\n"));
+        const count = arrayOutput.length - 1;
+        const invalidFiles = [...arrayOutput];
+        const successBody = `:green_circle: **Awesome**, all of your image assets are less than \`${inputs.thrashold_size}Kb\`.`;
+        const errorBody = `:warning: **Oh Snap!**, You have ${count} image asset(s) with a file-size of more than \`${inputs.thrashold_size}Kb\`. 
 If it's not possible to optimize the below assets, you can add them into a \`.assets-ignore\` file in the root of your repository`;
-
-    const getTableDataString = (invalidFiles) => {
-      const filteredFiles = [];
-
-      for (const item of invalidFiles) {
-        const fileName = item.split(" ").slice(-1).pop();
-        const fileSize = item.split(" ")[4];
-        if (fileName && fileSize) filteredFiles.push([fileName, fileSize]);
-      }
-
-      let res =
-        "**Oversized Assets**\n|File Name|File Size|\n|-----|:-----:|\n";
-      for (const item of filteredFiles) {
-        res += `|${item[0]}|${item[1]}|\n`;
-      }
-      return res;
-    };
-
-    /**
-     * Get all Ignored file data as github comment string format.
-     *
-     * @param {Array} ignoreArray array of files which is added in .assets-ignore file.
-     * @returns Promise of github comment string.
-     */
-    const getAllIgnoredFileString = (ignoreArray) => {
-      return new Promise((resolve, reject) => {
-        let res = "**All listed `.assets-ignored` Files**\n|File Name|File Size\n|-----|:-----:|\n";
-        for (let index = 0; index < ignoreArray.length; index++) {
-          const item = ignoreArray[index];
-
-          fs.stat(item, (err, fileStats) => {
-            if (err) {
-              res += "|-|-|\n";
-            } else {
-              const result = convertBytes(fileStats.size);
-              res += `|${item}|${result}|\n`;
+        const getTableDataString = (invalidFiles) => {
+            const filteredFiles = [];
+            for (const item of invalidFiles) {
+                const fileName = item.split(" ").slice(-1).pop();
+                const fileSize = item.split(" ")[4];
+                if (fileName && fileSize)
+                    filteredFiles.push([fileName, fileSize]);
             }
-
-            if (index === ignoreArray.length - 1) {
-              resolve(res);
+            let res = "**Oversized Assets**\n|File Name|File Size|\n|-----|:-----:|\n";
+            for (const item of filteredFiles) {
+                res += `|${item[0]}|${item[1]}|\n`;
             }
-          });
-        }
-      });
-    };
-
-    /**
-     * Delete previously posted github comments.
-     */
-    const removePreviousBotComments = async () => {
-      const { data: comments } = await octokit.rest.issues.listComments({
-        owner,
-        repo,
-        issue_number: issueNumber,
-      });
-      for (const comment of comments) {
-        if (
-          comment.user.login === "github-actions[bot]" &&
-          comment.body.includes(GITHUB_COMMENT_BOT_PREFIX)
-        ) {
-          try {
-            // @NOTE: looks like there is a bug with octokit.rest.issues.deleteComment 
-            // :facepalm; so gotta use octokit.request instead.
-            // await octokit.rest.issues.deleteComment({
-            //   owner,
-            //   repo,
-            //   comment_id: comment.id,
-            // });
-            await octokit.request(`DELETE /repos/${owner}/${repo}/issues/comments/${comment.id}`, {
-              owner,
-              repo,
-              comment_id: comment.id,
-              headers: {
-                'X-GitHub-Api-Version': '2022-11-28'
-              }
+            return res;
+        };
+        /**
+         * Get all Ignored file data as github comment string format.
+         *
+         * @param {Array} ignoreArray array of files which is added in .assets-ignore file.
+         * @returns Promise of github comment string.
+         */
+        const getAllIgnoredFileString = (ignoreArray) => {
+            return new Promise((resolve, reject) => {
+                let res = "**All listed `.assets-ignored` Files**\n|File Name|File Size\n|-----|:-----:|\n";
+                for (let index = 0; index < ignoreArray.length; index++) {
+                    const item = ignoreArray[index];
+                    external_node_fs_default().stat(item, (err, fileStats) => {
+                        if (err) {
+                            res += "|-|-|\n";
+                        }
+                        else {
+                            const result = convertBytes(fileStats.size);
+                            res += `|${item}|${result}|\n`;
+                        }
+                        if (index === ignoreArray.length - 1) {
+                            resolve(res);
+                        }
+                    });
+                }
             });
-          } catch (error) {
-            console.error("@@@ Error while deleting comment !!!", error);
-          }
-        }
-      }
-    };
-
-    await removePreviousBotComments();
-
-    const checkSuccess = count === 0;
-    const commentBody = `# ${checkSuccess ? ':mountain:' : ':warning:'} ${GITHUB_COMMENT_BOT_PREFIX}
-${checkSuccess ? successBody : `${errorBody}
+        };
+        /**
+         * Delete previously posted github comments.
+         */
+        const removePreviousBotComments = () => __awaiter(void 0, void 0, void 0, function* () {
+            var _a, _b;
+            const { data: comments } = yield octokit.rest.issues.listComments({
+                owner,
+                repo,
+                issue_number: issueNumber,
+            });
+            for (const comment of comments) {
+                if (((_a = comment.user) === null || _a === void 0 ? void 0 : _a.login) === "github-actions[bot]" &&
+                    ((_b = comment === null || comment === void 0 ? void 0 : comment.body) === null || _b === void 0 ? void 0 : _b.includes(GITHUB_COMMENT_BOT_PREFIX))) {
+                    try {
+                        // @NOTE: looks like there is a bug with octokit.rest.issues.deleteComment
+                        // :facepalm; so gotta use octokit.request instead.
+                        // await octokit.rest.issues.deleteComment({
+                        //   owner,
+                        //   repo,
+                        //   comment_id: comment.id,
+                        // });
+                        yield octokit.request(`DELETE /repos/${owner}/${repo}/issues/comments/${comment.id}`, {
+                            owner,
+                            repo,
+                            comment_id: comment.id,
+                            headers: {
+                                "X-GitHub-Api-Version": "2022-11-28",
+                            },
+                        });
+                    }
+                    catch (error) {
+                        console.error("@@@ Error while deleting comment !!!", error);
+                    }
+                }
+            }
+        });
+        yield removePreviousBotComments();
+        const checkSuccess = count === 0;
+        const commentBody = `# ${checkSuccess ? ":mountain:" : ":warning:"} ${GITHUB_COMMENT_BOT_PREFIX}
+${checkSuccess
+            ? successBody
+            : `${errorBody}
 
 ${getTableDataString(invalidFiles)}
-${await getAllIgnoredFileString(ignoreArray)}`}`;
-
-    octokit.rest.issues.createComment({
-      owner,
-      repo,
-      issue_number: issueNumber,
-      body: commentBody,
-    });
-
-    if (!checkSuccess) core.setFailed("Invalid size assets exists !!!");
-  } catch (error) {
-    core.setFailed(error.message);
-  }
-};
-
+${yield getAllIgnoredFileString(ignoreArray)}`}`;
+        octokit.rest.issues.createComment({
+            owner,
+            repo,
+            issue_number: issueNumber,
+            body: commentBody,
+        });
+        if (!checkSuccess)
+            core_default().setFailed("Invalid size assets exists !!!");
+    }
+    catch (error) {
+        const errorMessage = error.message;
+        core_default().setFailed(errorMessage);
+    }
+});
 main();
 
 })();

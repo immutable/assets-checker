@@ -1,18 +1,18 @@
-const core = require("@actions/core");
-const github = require("@actions/github");
-const exec = require("@actions/exec");
-const { Octokit } = require("@octokit/rest");
-const fs = require("node:fs");
+import fs from "node:fs";
+import core from "@actions/core";
+import exec from "@actions/exec";
+import github from "@actions/github";
+import { Octokit } from "@octokit/rest";
 
 const GITHUB_COMMENT_BOT_PREFIX = "AssetsCheckBot";
-const convertBytes = (bytes) => {
+const convertBytes = (bytes: number) => {
   const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
 
   if (bytes === 0) {
     return "n/a";
   }
 
-  const i = Number.parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+  const i = Math.floor(Math.log(bytes) / Math.log(1024));
 
   if (i === 0) {
     return `${bytes} ${sizes[i]}`;
@@ -39,14 +39,14 @@ const main = async () => {
     }
 
     const { number: issueNumber } = pullRequest;
-    const { full_name: repoFullName } = repository;
+    const repoFullName = repository?.full_name || "";
     const [owner, repo] = repoFullName.split("/");
 
     const octokit = new Octokit({
       auth: inputs.token,
     });
 
-    let ignoreArray = [];
+    let ignoreArray: string[] = [];
     let myOutput = "";
     let myError = "";
 
@@ -57,7 +57,7 @@ const main = async () => {
      * @param {Array} sourceArray Array of all assets files.
      * @returns Array of files.
      */
-    function getAssetsIgnoreFiles(sourceArray) {
+    function getAssetsIgnoreFiles(sourceArray: string[]) {
       const file = ".assets-ignore";
       try {
         ignoreArray = fs.readFileSync(file).toString().split("\n");
@@ -87,21 +87,18 @@ const main = async () => {
           stderr: (data) => {
             myError += data.toString();
           },
-        }
-      }
+        },
+      },
     );
 
     const arrayOutput = getAssetsIgnoreFiles(myOutput.split("\n"));
-
     const count = arrayOutput.length - 1;
-
     const invalidFiles = [...arrayOutput];
-
     const successBody = `:green_circle: **Awesome**, all of your image assets are less than \`${inputs.thrashold_size}Kb\`.`;
     const errorBody = `:warning: **Oh Snap!**, You have ${count} image asset(s) with a file-size of more than \`${inputs.thrashold_size}Kb\`. 
 If it's not possible to optimize the below assets, you can add them into a \`.assets-ignore\` file in the root of your repository`;
 
-    const getTableDataString = (invalidFiles) => {
+    const getTableDataString = (invalidFiles: string[]) => {
       const filteredFiles = [];
 
       for (const item of invalidFiles) {
@@ -124,9 +121,10 @@ If it's not possible to optimize the below assets, you can add them into a \`.as
      * @param {Array} ignoreArray array of files which is added in .assets-ignore file.
      * @returns Promise of github comment string.
      */
-    const getAllIgnoredFileString = (ignoreArray) => {
+    const getAllIgnoredFileString = (ignoreArray: string[]) => {
       return new Promise((resolve, reject) => {
-        let res = "**All listed `.assets-ignored` Files**\n|File Name|File Size\n|-----|:-----:|\n";
+        let res =
+          "**All listed `.assets-ignored` Files**\n|File Name|File Size\n|-----|:-----:|\n";
         for (let index = 0; index < ignoreArray.length; index++) {
           const item = ignoreArray[index];
 
@@ -157,25 +155,28 @@ If it's not possible to optimize the below assets, you can add them into a \`.as
       });
       for (const comment of comments) {
         if (
-          comment.user.login === "github-actions[bot]" &&
-          comment.body.includes(GITHUB_COMMENT_BOT_PREFIX)
+          comment.user?.login === "github-actions[bot]" &&
+          comment?.body?.includes(GITHUB_COMMENT_BOT_PREFIX)
         ) {
           try {
-            // @NOTE: looks like there is a bug with octokit.rest.issues.deleteComment 
+            // @NOTE: looks like there is a bug with octokit.rest.issues.deleteComment
             // :facepalm; so gotta use octokit.request instead.
             // await octokit.rest.issues.deleteComment({
             //   owner,
             //   repo,
             //   comment_id: comment.id,
             // });
-            await octokit.request(`DELETE /repos/${owner}/${repo}/issues/comments/${comment.id}`, {
-              owner,
-              repo,
-              comment_id: comment.id,
-              headers: {
-                'X-GitHub-Api-Version': '2022-11-28'
-              }
-            });
+            await octokit.request(
+              `DELETE /repos/${owner}/${repo}/issues/comments/${comment.id}`,
+              {
+                owner,
+                repo,
+                comment_id: comment.id,
+                headers: {
+                  "X-GitHub-Api-Version": "2022-11-28",
+                },
+              },
+            );
           } catch (error) {
             console.error("@@@ Error while deleting comment !!!", error);
           }
@@ -186,11 +187,17 @@ If it's not possible to optimize the below assets, you can add them into a \`.as
     await removePreviousBotComments();
 
     const checkSuccess = count === 0;
-    const commentBody = `# ${checkSuccess ? ':mountain:' : ':warning:'} ${GITHUB_COMMENT_BOT_PREFIX}
-${checkSuccess ? successBody : `${errorBody}
+    const commentBody = `# ${
+      checkSuccess ? ":mountain:" : ":warning:"
+    } ${GITHUB_COMMENT_BOT_PREFIX}
+${
+  checkSuccess
+    ? successBody
+    : `${errorBody}
 
 ${getTableDataString(invalidFiles)}
-${await getAllIgnoredFileString(ignoreArray)}`}`;
+${await getAllIgnoredFileString(ignoreArray)}`
+}`;
 
     octokit.rest.issues.createComment({
       owner,
@@ -201,7 +208,8 @@ ${await getAllIgnoredFileString(ignoreArray)}`}`;
 
     if (!checkSuccess) core.setFailed("Invalid size assets exists !!!");
   } catch (error) {
-    core.setFailed(error.message);
+    const errorMessage = (error as { message: string }).message;
+    core.setFailed(errorMessage);
   }
 };
 
