@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import core from "@actions/core";
+import { error, getInput, setFailed } from "@actions/core";
 import exec from "@actions/exec";
 import github from "@actions/github";
 import { Octokit } from "@octokit/rest";
@@ -24,9 +24,9 @@ const convertBytes = (bytes: number) => {
 const main = async () => {
   try {
     const inputs = {
-      token: core.getInput("token"),
-      target_folder: core.getInput("target_folder"),
-      thrashold_size: core.getInput("thrashold_size"),
+      token: getInput("token"),
+      target_folder: getInput("target_folder"),
+      thrashold_size: getInput("thrashold_size"),
     };
 
     const {
@@ -34,7 +34,7 @@ const main = async () => {
     } = github.context;
 
     if (!pullRequest) {
-      core.error("This action only works on pull_request events");
+      error("This action only works on pull_request events");
       return;
     }
 
@@ -206,10 +206,10 @@ ${await getAllIgnoredFileString(ignoreArray)}`
       body: commentBody,
     });
 
-    if (!checkSuccess) core.setFailed("Invalid size assets exists !!!");
+    if (!checkSuccess) setFailed("Invalid size assets exists !!!");
   } catch (error) {
     const errorMessage = (error as { message: string }).message;
-    core.setFailed(errorMessage);
+    setFailed(errorMessage);
   }
 };
 

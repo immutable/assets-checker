@@ -13315,7 +13315,6 @@ const external_node_fs_namespaceObject = require("node:fs");
 var external_node_fs_default = /*#__PURE__*/__nccwpck_require__.n(external_node_fs_namespaceObject);
 // EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(2186);
-var core_default = /*#__PURE__*/__nccwpck_require__.n(core);
 // EXTERNAL MODULE: ./node_modules/@actions/exec/lib/exec.js
 var exec = __nccwpck_require__(1514);
 var exec_default = /*#__PURE__*/__nccwpck_require__.n(exec);
@@ -13354,13 +13353,13 @@ const convertBytes = (bytes) => {
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const inputs = {
-            token: core_default().getInput("token"),
-            target_folder: core_default().getInput("target_folder"),
-            thrashold_size: core_default().getInput("thrashold_size"),
+            token: (0,core.getInput)("token"),
+            target_folder: (0,core.getInput)("target_folder"),
+            thrashold_size: (0,core.getInput)("thrashold_size"),
         };
         const { payload: { pull_request: pullRequest, repository }, } = (github_default()).context;
         if (!pullRequest) {
-            core_default().error("This action only works on pull_request events");
+            (0,core.error)("This action only works on pull_request events");
             return;
         }
         const { number: issueNumber } = pullRequest;
@@ -13505,11 +13504,11 @@ ${yield getAllIgnoredFileString(ignoreArray)}`}`;
             body: commentBody,
         });
         if (!checkSuccess)
-            core_default().setFailed("Invalid size assets exists !!!");
+            (0,core.setFailed)("Invalid size assets exists !!!");
     }
     catch (error) {
         const errorMessage = error.message;
-        core_default().setFailed(errorMessage);
+        (0,core.setFailed)(errorMessage);
     }
 });
 main();
