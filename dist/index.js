@@ -13310,9 +13310,6 @@ var __webpack_exports__ = {};
 // ESM COMPAT FLAG
 __nccwpck_require__.r(__webpack_exports__);
 
-;// CONCATENATED MODULE: external "node:fs"
-const external_node_fs_namespaceObject = require("node:fs");
-var external_node_fs_default = /*#__PURE__*/__nccwpck_require__.n(external_node_fs_namespaceObject);
 // EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(2186);
 // EXTERNAL MODULE: ./node_modules/@actions/exec/lib/exec.js
@@ -13321,8 +13318,127 @@ var exec = __nccwpck_require__(1514);
 var github = __nccwpck_require__(5438);
 // EXTERNAL MODULE: ./node_modules/@octokit/rest/dist-node/index.js
 var dist_node = __nccwpck_require__(5375);
-;// CONCATENATED MODULE: ./src/main.ts
+;// CONCATENATED MODULE: external "node:fs"
+const external_node_fs_namespaceObject = require("node:fs");
+var external_node_fs_default = /*#__PURE__*/__nccwpck_require__.n(external_node_fs_namespaceObject);
+;// CONCATENATED MODULE: ./src/utils.ts
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+function getTableDataString(invalidFiles) {
+    const filteredFiles = [];
+    for (const item of invalidFiles) {
+        const fileName = item.split(" ").slice(-1).pop();
+        const fileSize = item.split(" ")[4];
+        if (fileName && fileSize)
+            filteredFiles.push([fileName, fileSize]);
+    }
+    let res = "**Oversized Assets**\n|File Name|File Size|\n|-----|:-----:|\n";
+    for (const item of filteredFiles) {
+        res += `|${item[0]}|${item[1]}|\n`;
+    }
+    return res;
+}
+function getAllIgnoredFileString(ignoreArray) {
+    return new Promise((resolve, reject) => {
+        let res = "**All listed `.assets-ignored` Files**\n|File Name|File Size\n|-----|:-----:|\n";
+        for (let index = 0; index < ignoreArray.length; index++) {
+            const item = ignoreArray[index];
+            external_node_fs_default().stat(item, (err, fileStats) => {
+                if (err) {
+                    res += "|-|-|\n";
+                }
+                else {
+                    const result = convertBytes(fileStats.size);
+                    res += `|${item}|${result}|\n`;
+                }
+                if (index === ignoreArray.length - 1) {
+                    resolve(res);
+                }
+            });
+        }
+    });
+}
+const GITHUB_COMMENT_BOT_PREFIX = "AssetsCheckBot";
+function convertBytes(bytes) {
+    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+    if (bytes === 0) {
+        return "n/a";
+    }
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    if (i === 0) {
+        return `${bytes} ${sizes[i]}`;
+    }
+    return `${(bytes / Math.pow(1024, i)).toFixed(1)} ${sizes[i]}`;
+}
+function renderCommentBody(isSuccess, successBody, errorBody) {
+    return `# ${isSuccess ? ":mountain:" : ":warning:"} ${GITHUB_COMMENT_BOT_PREFIX}
+${isSuccess ? successBody : errorBody}`;
+}
+function removePreviousBotComments(octokit, owner, repo, issueNumber) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var _a, _b;
+        const { data: comments } = yield octokit.rest.issues.listComments({
+            owner,
+            repo,
+            issue_number: issueNumber,
+        });
+        for (const comment of comments) {
+            if (((_a = comment.user) === null || _a === void 0 ? void 0 : _a.login) === "github-actions[bot]" &&
+                ((_b = comment === null || comment === void 0 ? void 0 : comment.body) === null || _b === void 0 ? void 0 : _b.includes(GITHUB_COMMENT_BOT_PREFIX))) {
+                try {
+                    // @NOTE: looks like there is a bug with octokit.rest.issues.deleteComment
+                    // :facepalm; so gotta use octokit.request instead.
+                    // await octokit.rest.issues.deleteComment({
+                    //   owner,
+                    //   repo,
+                    //   comment_id: comment.id,
+                    // });
+                    yield octokit.request(`DELETE /repos/${owner}/${repo}/issues/comments/${comment.id}`, {
+                        owner,
+                        repo,
+                        comment_id: comment.id,
+                        headers: {
+                            "X-GitHub-Api-Version": "2022-11-28",
+                        },
+                    });
+                }
+                catch (error) {
+                    console.error("@@@ Error while deleting comment !!!", error);
+                }
+            }
+        }
+    });
+}
+function getIgnoreArray() {
+    return external_node_fs_default().readFileSync(".assets-ignore").toString().split("\n");
+}
+function getAssetsIgnoreFiles(sourceArray, ignoreArray) {
+    try {
+        if (ignoreArray.length > 0) {
+            return sourceArray.filter((v) => {
+                const fileName = v.split(" ").slice(-1).pop();
+                if (!fileName)
+                    return true;
+                return ignoreArray.indexOf(fileName) === -1;
+            });
+        }
+    }
+    catch (e) {
+        // File not found exception.
+    }
+    return sourceArray;
+}
+
+;// CONCATENATED MODULE: ./src/main.ts
+var main_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -13336,20 +13452,8 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 
 
-const GITHUB_COMMENT_BOT_PREFIX = "AssetsCheckBot";
-function convertBytes(bytes) {
-    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-    if (bytes === 0) {
-        return "n/a";
-    }
-    const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    if (i === 0) {
-        return `${bytes} ${sizes[i]}`;
-    }
-    return `${(bytes / Math.pow(1024, i)).toFixed(1)} ${sizes[i]}`;
-}
 function main() {
-    return __awaiter(this, void 0, void 0, function* () {
+    return main_awaiter(this, void 0, void 0, function* () {
         try {
             const inputs = {
                 token: (0,core.getInput)("token"),
@@ -13367,38 +13471,20 @@ function main() {
             const octokit = new dist_node/* Octokit */.v({
                 auth: inputs.token,
             });
-            let ignoreArray = [];
-            let myOutput = "";
-            let myError = "";
-            function getAssetsIgnoreFiles(sourceArray) {
-                const file = ".assets-ignore";
-                try {
-                    ignoreArray = external_node_fs_default().readFileSync(file).toString().split("\n");
-                    if (ignoreArray.length > 0) {
-                        return sourceArray.filter((v) => {
-                            const fileName = v.split(" ").slice(-1).pop();
-                            if (!fileName)
-                                return true;
-                            return ignoreArray.indexOf(fileName) === -1;
-                        });
-                    }
-                }
-                catch (e) {
-                    // File not found exception.
-                }
-                return sourceArray;
-            }
+            const ignoreArray = getIgnoreArray();
+            let execOutput = "";
+            let execError = "";
             yield (0,exec.exec)(`find ${inputs.target_folder} -type f \( -name "*.jpeg" -o -name "*.png" -o -name "*.svg" -o -name "*.gif" -o -name "*.jpg" -o -name "*.riv" -o -name "*.webp" \) -size +${inputs.thrashold_size}k -exec ls -lh {} \;`, undefined, {
                 listeners: {
                     stdout: (data) => {
-                        myOutput += data.toString();
+                        execOutput += data.toString();
                     },
                     stderr: (data) => {
-                        myError += data.toString();
+                        execError += data.toString();
                     },
                 },
             });
-            const arrayOutput = getAssetsIgnoreFiles(myOutput.split("\n"));
+            const arrayOutput = getAssetsIgnoreFiles(execOutput.split("\n"), ignoreArray);
             const count = arrayOutput.length - 1;
             const invalidFiles = [...arrayOutput];
             const successBody = `:green_circle: **Awesome**, all of your image assets are less than \`${inputs.thrashold_size}Kb\`.`;
@@ -13406,90 +13492,17 @@ function main() {
 If it's not possible to optimize the below assets, you can add them into a \`.assets-ignore\` file in the root of your repository.
 
 **NOTE:** If you are using Biome [image](https://immutable.atlassian.net/wiki/spaces/DS/pages/2547024003/Optimising+images+for+the+web#How-BIOME-makes-working-with-images-easier) components to display these assets, and you are not opting out of their default functionality, you can safely ignore this warning - as these images will be optimized on-the-fly by our AWS Image Resizer infrastructure. More details [here](https://immutable.atlassian.net/wiki/spaces/DS/pages/2547024003/Optimising+images+for+the+web#How-BIOME-makes-working-with-images-easier).
-`;
-            function getTableDataString(invalidFiles) {
-                const filteredFiles = [];
-                for (const item of invalidFiles) {
-                    const fileName = item.split(" ").slice(-1).pop();
-                    const fileSize = item.split(" ")[4];
-                    if (fileName && fileSize)
-                        filteredFiles.push([fileName, fileSize]);
-                }
-                let res = "**Oversized Assets**\n|File Name|File Size|\n|-----|:-----:|\n";
-                for (const item of filteredFiles) {
-                    res += `|${item[0]}|${item[1]}|\n`;
-                }
-                return res;
-            }
-            function getAllIgnoredFileString(ignoreArray) {
-                return new Promise((resolve, reject) => {
-                    let res = "**All listed `.assets-ignored` Files**\n|File Name|File Size\n|-----|:-----:|\n";
-                    for (let index = 0; index < ignoreArray.length; index++) {
-                        const item = ignoreArray[index];
-                        external_node_fs_default().stat(item, (err, fileStats) => {
-                            if (err) {
-                                res += "|-|-|\n";
-                            }
-                            else {
-                                const result = convertBytes(fileStats.size);
-                                res += `|${item}|${result}|\n`;
-                            }
-                            if (index === ignoreArray.length - 1) {
-                                resolve(res);
-                            }
-                        });
-                    }
-                });
-            }
-            function removePreviousBotComments() {
-                return __awaiter(this, void 0, void 0, function* () {
-                    var _a, _b;
-                    const { data: comments } = yield octokit.rest.issues.listComments({
-                        owner,
-                        repo,
-                        issue_number: issueNumber,
-                    });
-                    for (const comment of comments) {
-                        if (((_a = comment.user) === null || _a === void 0 ? void 0 : _a.login) === "github-actions[bot]" &&
-                            ((_b = comment === null || comment === void 0 ? void 0 : comment.body) === null || _b === void 0 ? void 0 : _b.includes(GITHUB_COMMENT_BOT_PREFIX))) {
-                            try {
-                                // @NOTE: looks like there is a bug with octokit.rest.issues.deleteComment
-                                // :facepalm; so gotta use octokit.request instead.
-                                // await octokit.rest.issues.deleteComment({
-                                //   owner,
-                                //   repo,
-                                //   comment_id: comment.id,
-                                // });
-                                yield octokit.request(`DELETE /repos/${owner}/${repo}/issues/comments/${comment.id}`, {
-                                    owner,
-                                    repo,
-                                    comment_id: comment.id,
-                                    headers: {
-                                        "X-GitHub-Api-Version": "2022-11-28",
-                                    },
-                                });
-                            }
-                            catch (error) {
-                                console.error("@@@ Error while deleting comment !!!", error);
-                            }
-                        }
-                    }
-                });
-            }
-            yield removePreviousBotComments();
-            const checkSuccess = count === 0;
-            const commentBody = `# ${checkSuccess ? ":mountain:" : ":warning:"} ${GITHUB_COMMENT_BOT_PREFIX}
-${checkSuccess
-                ? successBody
-                : `${errorBody}
 
 ${getTableDataString(invalidFiles)}
-${yield getAllIgnoredFileString(ignoreArray)}`}`;
+${yield getAllIgnoredFileString(ignoreArray)}
+`;
+            yield removePreviousBotComments(octokit, owner, repo, issueNumber);
+            const checkSuccess = count === 0;
             octokit.rest.issues.createComment({
                 owner,
                 repo,
                 issue_number: issueNumber,
-                body: commentBody,
+                body: renderCommentBody(checkSuccess, successBody, errorBody),
             });
             if (!checkSuccess)
                 (0,core.setFailed)("Invalid size assets exists !!!");
