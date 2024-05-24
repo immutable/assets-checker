@@ -1,7 +1,6 @@
 {
   "name": "assets-check-bot",
   "version": "0.0.1",
-  "description": "A Github Action to Analyse your static image files and warns if the size increase the threshold size. It check for .jpg, .svg, .png, .gif, .jpeg files.",
   "main": "dist/index.js",
   "types": "./dist/main.d.ts",
   "scripts": {
