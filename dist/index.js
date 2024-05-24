@@ -13436,6 +13436,16 @@ function getAssetsIgnoreFiles(sourceArray, ignoreArray) {
     }
     return sourceArray;
 }
+const getErrorCommentBody = (_a) => __awaiter(void 0, [_a], void 0, function* ({ count, thresholdSize, invalidFiles, ignoreArray, }) {
+    return `:warning: **Oh Snap!**, You have \`${count}\` image asset(s) with a file-size of more than \`${thresholdSize}Kb\`. 
+If it's not possible to optimize the below assets, you can add them into a \`.assets-ignore\` file in the root of your repository.
+
+**NOTE:** If you are using Biome [image](https://immutable.atlassian.net/wiki/spaces/DS/pages/2547024003/Optimising+images+for+the+web#How-BIOME-makes-working-with-images-easier) components to display these assets, and you are not opting out of their default functionality, you can safely ignore this warning - as these images will be optimized on-the-fly by our AWS Image Resizer infrastructure. More details [here](https://immutable.atlassian.net/wiki/spaces/DS/pages/2547024003/Optimising+images+for+the+web#How-BIOME-makes-working-with-images-easier).
+
+${getTableDataString(invalidFiles)}
+${yield getAllIgnoredFileString(ignoreArray)}`;
+});
+const getSuccessCommentBody = ({ thresholdSize, }) => `:green_circle: **Awesome**, all of your image assets are less than \`${thresholdSize}Kb\`.`;
 
 ;// CONCATENATED MODULE: ./src/main.ts
 var main_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -13457,8 +13467,8 @@ function main() {
         try {
             const inputs = {
                 token: (0,core.getInput)("token"),
-                target_folder: (0,core.getInput)("target_folder"),
-                thrashold_size: (0,core.getInput)("thrashold_size"),
+                targetFolder: (0,core.getInput)("target_folder"),
+                thresholdSize: (0,core.getInput)("threshold_size"),
             };
             const { payload: { pull_request: pullRequest, repository }, } = github.context;
             if (!pullRequest) {
@@ -13474,7 +13484,7 @@ function main() {
             const ignoreArray = getIgnoreArray();
             let execOutput = "";
             let execError = "";
-            yield (0,exec.exec)(`find ${inputs.target_folder} -type f \( -name "*.jpeg" -o -name "*.png" -o -name "*.svg" -o -name "*.gif" -o -name "*.jpg" -o -name "*.riv" -o -name "*.webp" \) -size +${inputs.thrashold_size}k -exec ls -lh {} \;`, undefined, {
+            yield (0,exec.exec)(`find ${inputs.targetFolder} -type f \( -name "*.jpeg" -o -name "*.png" -o -name "*.svg" -o -name "*.gif" -o -name "*.jpg" -o -name "*.riv" -o -name "*.webp" \) -size +${inputs.thresholdSize}k -exec ls -lh {} \;`, undefined, {
                 listeners: {
                     stdout: (data) => {
                         execOutput += data.toString();
@@ -13487,15 +13497,15 @@ function main() {
             const arrayOutput = getAssetsIgnoreFiles(execOutput.split("\n"), ignoreArray);
             const count = arrayOutput.length - 1;
             const invalidFiles = [...arrayOutput];
-            const successBody = `:green_circle: **Awesome**, all of your image assets are less than \`${inputs.thrashold_size}Kb\`.`;
-            const errorBody = `:warning: **Oh Snap!**, You have \`${count}\` image asset(s) with a file-size of more than \`${inputs.thrashold_size}Kb\`. 
-If it's not possible to optimize the below assets, you can add them into a \`.assets-ignore\` file in the root of your repository.
-
-**NOTE:** If you are using Biome [image](https://immutable.atlassian.net/wiki/spaces/DS/pages/2547024003/Optimising+images+for+the+web#How-BIOME-makes-working-with-images-easier) components to display these assets, and you are not opting out of their default functionality, you can safely ignore this warning - as these images will be optimized on-the-fly by our AWS Image Resizer infrastructure. More details [here](https://immutable.atlassian.net/wiki/spaces/DS/pages/2547024003/Optimising+images+for+the+web#How-BIOME-makes-working-with-images-easier).
-
-${getTableDataString(invalidFiles)}
-${yield getAllIgnoredFileString(ignoreArray)}
-`;
+            const successBody = getSuccessCommentBody({
+                thresholdSize: inputs.thresholdSize,
+            });
+            const errorBody = yield getErrorCommentBody({
+                count,
+                thresholdSize: inputs.thresholdSize,
+                invalidFiles,
+                ignoreArray,
+            });
             yield removePreviousBotComments(octokit, owner, repo, issueNumber);
             const checkSuccess = count === 0;
             octokit.rest.issues.createComment({

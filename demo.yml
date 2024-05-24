@@ -25,4 +25,4 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           target_folder: ./
-          thrashold_size: 5000
+          threshold_size: 5000
