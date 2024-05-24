@@ -5,9 +5,8 @@ import { context } from "@actions/github";
 import { Octokit } from "@octokit/rest";
 
 const GITHUB_COMMENT_BOT_PREFIX = "AssetsCheckBot";
-const convertBytes = (bytes: number) => {
+function convertBytes(bytes: number) {
   const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-
   if (bytes === 0) {
     return "n/a";
   }
@@ -19,7 +18,7 @@ const convertBytes = (bytes: number) => {
   }
 
   return `${(bytes / 1024 ** i).toFixed(1)} ${sizes[i]}`;
-};
+}
 
 const main = async () => {
   try {

@@ -13337,7 +13337,7 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 
 const GITHUB_COMMENT_BOT_PREFIX = "AssetsCheckBot";
-const convertBytes = (bytes) => {
+function convertBytes(bytes) {
     const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
     if (bytes === 0) {
         return "n/a";
@@ -13347,7 +13347,7 @@ const convertBytes = (bytes) => {
         return `${bytes} ${sizes[i]}`;
     }
     return `${(bytes / Math.pow(1024, i)).toFixed(1)} ${sizes[i]}`;
-};
+}
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const inputs = {
