@@ -13370,13 +13370,6 @@ function main() {
             let ignoreArray = [];
             let myOutput = "";
             let myError = "";
-            /**
-             * Check if array assets file name contains inside .ignore-assets file or not.
-             * If its contains then remove those images from sourceArray and return new array.
-             *
-             * @param {Array} sourceArray Array of all assets files.
-             * @returns Array of files.
-             */
             function getAssetsIgnoreFiles(sourceArray) {
                 const file = ".assets-ignore";
                 try {
