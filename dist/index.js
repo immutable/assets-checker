@@ -13436,7 +13436,7 @@ function getAssetsIgnoreFiles(sourceArray, ignoreArray) {
     }
     return sourceArray;
 }
-const getErrorCommentBody = (_a) => __awaiter(void 0, [_a], void 0, function* ({ count, thresholdSize, invalidFiles, ignoreArray, }) {
+const getErrorCommentBody = (count, thresholdSize, invalidFiles, ignoreArray) => __awaiter(void 0, void 0, void 0, function* () {
     return `:warning: **Oh Snap!**, You have \`${count}\` image asset(s) with a file-size of more than \`${thresholdSize}Kb\`. 
 If it's not possible to optimize the below assets, you can add them into a \`.assets-ignore\` file in the root of your repository.
 
@@ -13500,12 +13500,7 @@ function main() {
             const successBody = getSuccessCommentBody({
                 thresholdSize: inputs.thresholdSize,
             });
-            const errorBody = yield getErrorCommentBody({
-                count,
-                thresholdSize: inputs.thresholdSize,
-                invalidFiles,
-                ignoreArray,
-            });
+            const errorBody = yield getErrorCommentBody(count, inputs.thresholdSize, invalidFiles, ignoreArray);
             yield removePreviousBotComments(octokit, owner, repo, issueNumber);
             const checkSuccess = count === 0;
             octokit.rest.issues.createComment({

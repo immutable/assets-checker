@@ -132,17 +132,12 @@ export function getAssetsIgnoreFiles(
   return sourceArray;
 }
 
-export const getErrorCommentBody = async ({
-  count,
-  thresholdSize,
-  invalidFiles,
-  ignoreArray,
-}: {
-  count: number;
-  thresholdSize: string;
-  invalidFiles: string[];
-  ignoreArray: string[];
-}) => `:warning: **Oh Snap!**, You have \`${count}\` image asset(s) with a file-size of more than \`${thresholdSize}Kb\`. 
+export const getErrorCommentBody = async (
+  count: number,
+  thresholdSize: string,
+  invalidFiles: string[],
+  ignoreArray: string[],
+) => `:warning: **Oh Snap!**, You have \`${count}\` image asset(s) with a file-size of more than \`${thresholdSize}Kb\`. 
 If it's not possible to optimize the below assets, you can add them into a \`.assets-ignore\` file in the root of your repository.
 
 **NOTE:** If you are using Biome [image](https://immutable.atlassian.net/wiki/spaces/DS/pages/2547024003/Optimising+images+for+the+web#How-BIOME-makes-working-with-images-easier) components to display these assets, and you are not opting out of their default functionality, you can safely ignore this warning - as these images will be optimized on-the-fly by our AWS Image Resizer infrastructure. More details [here](https://immutable.atlassian.net/wiki/spaces/DS/pages/2547024003/Optimising+images+for+the+web#How-BIOME-makes-working-with-images-easier).

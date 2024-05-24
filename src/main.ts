@@ -64,12 +64,12 @@ async function main() {
     const successBody = getSuccessCommentBody({
       thresholdSize: inputs.thresholdSize,
     });
-    const errorBody = await getErrorCommentBody({
+    const errorBody = await getErrorCommentBody(
       count,
-      thresholdSize: inputs.thresholdSize,
+      inputs.thresholdSize,
       invalidFiles,
       ignoreArray,
-    });
+    );
 
     await removePreviousBotComments(octokit, owner, repo, issueNumber);
 
