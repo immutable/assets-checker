@@ -17,6 +17,11 @@
     "type": "git",
     "url": "git+https://github.com/immutable/assets-checker.git"
   },
+  "engines": {
+    "node": ">=18",
+    "npm": ">=8"
+  },
+  "packageManager": "npm@8.19.2",
   "keywords": [],
   "author": "immutable/biom3",
   "license": "Apache-2.0",
